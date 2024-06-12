@@ -20,7 +20,9 @@ jobs:
       - name: Use stable versions of KSC and JS runtime
         run: |
           npm install kaitai-struct-compiler@latest kaitai-struct@latest
-          node vendor_build.js
+          npm run generate-license
+          npm run generate-formats
+          npm run parcel-build
         if: github.ref == 'refs/heads/stable'
       - name: Set up environment variables for stable deployment
         run: |
@@ -33,7 +35,7 @@ jobs:
       - name: Build
         env:
           SENTRY_DSN: 'https://a01cdb58ab3e43dd9ce695dd20a19d00@sentry.io/202888'
-        run: ./build
+        run: node build.js "dist"
       - name: Deploy
         env:
           BOT_SSH_KEY: ${{secrets.BOT_SSH_KEY}}
@@ -54,4 +56,4 @@ jobs:
             --exclude=favicon.ico \
             --exclude=favicon.ico.license \
             --exclude=devel/ \
-            out/
+            dist/
